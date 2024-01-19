@@ -1,6 +1,7 @@
 import nacl from '@rmf1723/tweetnacl'
 import core from './core.js'
 
+const inspect: unique symbol = Symbol.for('nodejs.util.inspect.custom')
 const cloneKey: unique symbol = Symbol()
 
 export class Scalar {
@@ -66,6 +67,10 @@ export class Scalar {
 
   toBytes(): Uint8Array {
     return new Uint8Array(this.#bytes)
+  }
+
+  [inspect]() {
+    return `Scalar ${byteArrayToHex(this.#bytes)}]`
   }
 
   static #ZERO = Object.freeze(
@@ -136,6 +141,10 @@ export class Point {
     return new Uint8Array(this.#bytes)
   }
 
+  [inspect]() {
+    return `Point ${byteArrayToHex(this.#bytes)}`
+  }
+
   static get BASE(): Point {
     const p = new Point(core.basePoint)
     p.mul = rhs => rhs.mulBase()
@@ -150,5 +159,18 @@ function ctEq(lhs: Uint8Array, rhs: Uint8Array): boolean {
   }
   return failures == 0
 }
+
+function pad(s: string, size: number) {
+  let res = `${s}`
+  while (res.length < size) res = `0${res}`
+  return res
+}
+
+function byteArrayToHex(byteArray: ArrayLike<number>) {
+  return Array.from(byteArray, byte => {
+    return pad((byte & 0xff).toString(16), 2)
+  }).join('')
+}
+
 
 // TODO COMPRESS/DECOMPRESS?
