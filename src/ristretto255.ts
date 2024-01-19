@@ -61,6 +61,16 @@ export class Scalar {
     return new Scalar(this.#bytes, cloneKey)
   }
 
+  static fromHash(hash: Uint8Array): Scalar {
+    if (hash.byteLength != 64) {
+      throw new Error('invalid hash length for ristretto255 scalar')
+    }
+    const f = new Float64Array(hash)
+    const reduced = new Uint8Array(32)
+    nacl.lowlevel.modL(reduced, f)
+    return new Scalar(reduced, cloneKey)
+  }
+
   static random(): Scalar {
     return new Scalar(core.scalar.getRandom())
   }
@@ -171,6 +181,5 @@ function byteArrayToHex(byteArray: ArrayLike<number>) {
     return pad((byte & 0xff).toString(16), 2)
   }).join('')
 }
-
 
 // TODO COMPRESS/DECOMPRESS?

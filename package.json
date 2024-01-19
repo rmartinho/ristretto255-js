@@ -1,6 +1,6 @@
 {
   "name": "@rmf1723/ristretto255",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Supports the ristretto255 group operations on top of TweetNaCl.js",
   "type": "module",
   "main": "dist/ristretto255.js",
