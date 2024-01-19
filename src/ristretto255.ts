@@ -1,5 +1,5 @@
 import nacl from '@rmf1723/tweetnacl'
-import core from './core'
+import core from './core.js'
 
 const cloneKey: unique symbol = Symbol()
 
